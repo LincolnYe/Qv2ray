@@ -26,23 +26,23 @@ jobs:
     if: ${{ !contains( needs.check_commit_msg.outputs.commit_message, '!QT5') }}
     strategy:
       matrix:
-        platform: [macos-latest, windows-latest]
+        platform: [macos-latest]
         arch: [x64, arm64]
         build_type: [RelWithDebInfo, Release]
-        qt_version: [5.15.17]
-        include:
-          - platform: windows-latest
-            arch: x64
-            qtarch: win64_msvc2019_64
+        qt_version: [5.15.16]
+        # include:
+          # - platform: windows-latest
+          #   arch: x64
+          #   qtarch: win64_msvc2019_64
           # - platform: macos-latest
           #   arch: arm64
           #   qtarch: macos-arm64
-          - platform: windows-latest
-            arch: arm64
-            qtarch: win32-msvc2019-arm64
+          # - platform: windows-latest
+          #   arch: arm64
+          #   qtarch: win32-msvc2019-arm64
       fail-fast: false
 
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }} ${{ matrix.arch }}
     env:
       _QV2RAY_BUILD_INFO_: "Qv2ray built from Github Action"
       _QV2RAY_BUILD_EXTRA_INFO_: "qt${{ matrix.qt_version }}-${{ github.sha }}-ci.${{ matrix.platform }}"
@@ -93,7 +93,7 @@ jobs:
               fcitx5-frontend-qt5 \
               libcurl4-openssl-dev libssl-dev fuse
       # --------------------------------------------------------
-      - name: macOS - ${{ matrix.qt_version }} - Build preparation - Install Packages
+      - name: macOS - ${{ matrix.arch }} - ${{ matrix.qt_version }} - Build preparation - Install Packages
         if: matrix.platform == 'macos-latest'
         run: brew install protobuf grpc ninja pkg-config openssl
       # --------------------------------------------------------
