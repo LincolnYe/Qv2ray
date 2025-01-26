@@ -26,8 +26,8 @@ jobs:
     if: ${{ !contains( needs.check_commit_msg.outputs.commit_message, '!QT5') }}
     strategy:
       matrix:
-        platform: [ubuntu-20.04, macos-latest, windows-latest]
-        arch: [x64]
+        platform: [macos-latest, windows-latest]
+        arch: [x64, arm64]
         build_type: [RelWithDebInfo, Release]
         qt_version: [5.15.0]
         include:
@@ -70,7 +70,7 @@ jobs:
           path: ../Qt
           key: QtCache-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.qt_version }}
       - name: Installing Qt - ${{ matrix.arch }}
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: ${{ matrix.qt_version }}
           arch: ${{ matrix.qtarch }}
