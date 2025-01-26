@@ -42,13 +42,18 @@ jobs:
             qtarch: win32-msvc2019-arm64
       fail-fast: false
 
-    runs-on: ${{ matrix.platform }} ${{ matrix.arch }}
+    runs-on: [${{ matrix.platform }} , ${{ matrix.arch }}]
     env:
       _QV2RAY_BUILD_INFO_: "Qv2ray built from Github Action"
       _QV2RAY_BUILD_EXTRA_INFO_: "qt${{ matrix.qt_version }}-${{ github.sha }}-ci.${{ matrix.platform }}"
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     steps:
+      - name: Print system information
+        if: matrix.platform == 'macos-latest'
+        run: |
+          uname -a
+          sysctl -n machdep.cpu.brand_string
       - name: Get the version
         id: get_version
         shell: bash
